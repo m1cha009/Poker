@@ -69,16 +69,16 @@ namespace _Scripts
 			Shuffle();
 			
 			_cardsStack.Clear();
-			// foreach (var card in _cards)
-			// {
-			// 	_cardsStack.Push(card);
-			// }
-			
-			// setup predifined cards
-			foreach (var card in FullHouseCards())
+			foreach (var card in _cards)
 			{
 				_cardsStack.Push(card);
 			}
+			
+			// setup predifined cards
+			// foreach (var card in FullHouseCards())
+			// {
+			// 	_cardsStack.Push(card);
+			// }
 			
 			Debug.Log("Cards shuffled");
 		}

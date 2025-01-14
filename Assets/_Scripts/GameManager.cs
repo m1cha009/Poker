@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using _Scripts.Enums;
 using _Scripts.Helpers;
 using _Scripts.SO;
 using UnityEngine;
@@ -14,19 +15,25 @@ namespace _Scripts
 	{
 		[SerializeField] private Button _menuButton;
 		[SerializeField] private Button _dealCardsButton;
-		[SerializeField] private Button _flopButton;
-		[SerializeField] private Button _winnerButton;
 		[SerializeField] private GameData _gameData;
 		[SerializeField] private Player _playerPrefab;
 		[SerializeField] private List<GameObject> _playerPos;
 		[SerializeField] private PokerManager _pokerManager;
 		[SerializeField] private GameObject[] _tableCardPos;
 		[SerializeField] private CardComponent _cardPrefab;
+		
+		private TurnsManager _turnsManager;
 
 		private int _playerAmount;
-		private List<Player> _players = new();
+		private readonly List<Player> _players = new();
 		private const string SceneNameString = "Menu";
-		private List<CardComponent> _tableCardsComponent = new();
+		private readonly List<CardComponent> _tableCardsComponent = new();
+		private List<Card> _tableCards = new();
+
+		private void Awake()
+		{
+			TryGetComponent(out _turnsManager);
+		}
 
 		private void Start()
 		{
@@ -34,7 +41,8 @@ namespace _Scripts
 			
 			_menuButton.onClick.AddListener(OnMenuClick);
 			_dealCardsButton.onClick.AddListener(OnDealCardsClick);
-			_winnerButton.onClick.AddListener(OnWinnerClick);
+			
+			_turnsManager.OnChangeTableStage += OnTableStateChanged;
 			
 			InitializePlayers();
 			InitializeTableCards();
@@ -44,7 +52,8 @@ namespace _Scripts
 		{
 			_menuButton.onClick.RemoveListener(OnMenuClick);
 			_dealCardsButton.onClick.RemoveListener(OnDealCardsClick);
-			_winnerButton.onClick.RemoveListener(OnWinnerClick);
+			
+			_turnsManager.OnChangeTableStage -= OnTableStateChanged;
 		}
 
 		private void InitializePlayers()
@@ -62,11 +71,12 @@ namespace _Scripts
 		{
 			for (var i = 0; i < 5; i++)
 			{
-				var flopCard = Instantiate(_cardPrefab, _tableCardPos[i].transform);
+				var templateCards = Instantiate(_cardPrefab, _tableCardPos[i].transform);
 
-				flopCard.SetDefaultCardImage();
+				templateCards.SetDefaultCardImage();
+				templateCards.gameObject.SetActive(false);
 				
-				_tableCardsComponent.Add(flopCard);
+				_tableCardsComponent.Add(templateCards);
 			}
 		}
 		
@@ -77,6 +87,7 @@ namespace _Scripts
 		
 		private void OnDealCardsClick()
 		{
+			ClearTableCards();
 			_pokerManager.ShuffleCards();
 			
 			foreach (var player in _players)
@@ -92,28 +103,65 @@ namespace _Scripts
 				
 				player.DisplayCards();
 			}
-			
-			ShowCards();
+
+			_turnsManager.Initialize(_players);
 		}
-		
-		private void ShowCards()
+
+		private void OnTableStateChanged(TableStage tableStage)
 		{
-			var tableCards = new List<Card>();
+			Debug.Log($"OnTableStateChanged: {tableStage}");
 			
-			var flopCards = _pokerManager.DealFlop();
-			tableCards.AddRange(flopCards);
-			var turnCard = _pokerManager.DealTurn();
-			tableCards.Add(turnCard);
-			var riverCard = _pokerManager.DealRiver();
-			tableCards.Add(riverCard);
+			if (tableStage == TableStage.PreFlop)
+			{
+				CheckWinner();
+				_turnsManager.TriggerActionVisibility(false);
+				
+				return;
+			}
+			
+			switch (tableStage)
+			{
+				case TableStage.Flop:
+					var flopCards = _pokerManager.DealFlop();
+					_tableCards.AddRange(flopCards);
+					
+					break;
+				case TableStage.Turn:
+					var turnCard = _pokerManager.DealTurn();
+					_tableCards.Add(turnCard);
+					
+					break;
+				case TableStage.River:
+					var riverCard = _pokerManager.DealRiver();
+					_tableCards.Add(riverCard);
+					
+					break;
+			}
+			
+			DisplayTableCards();
+		}
 
+		private void ClearTableCards()
+		{
+			_tableCards.Clear();
+			
+			foreach (var cardComponent in _tableCardsComponent)
+			{
+				cardComponent.SetDefaultCardImage();
+				cardComponent.gameObject.SetActive(false);
+			}
+		}
+
+		private void DisplayTableCards()
+		{
 			var k = 0;
-
-			foreach (var card in tableCards)
+			
+			foreach (var card in _tableCards)
 			{
 				var cardSprite = CardSpritesHelper.GetCardSprite(card);
 				
 				_tableCardsComponent[k].SetCardImage(cardSprite);
+				_tableCardsComponent[k].gameObject.SetActive(true);
 				k++;
 			}
 		}
