@@ -10,13 +10,13 @@ namespace _Scripts
 	{
 		[SerializeField] private TMP_Dropdown _playerAmountDropdown;
 		[SerializeField] private Button _startGameButton;
-		[SerializeField] private GameData _gameData;
+		[SerializeField] private GameDataSo _gameDataSo;
 
 		private const string GameSceneString = "Game";
 
 		private void Start()
 		{
-			_gameData.PlayerAmount = 2;
+			_gameDataSo.PlayerAmount = 2;
 			
 			_playerAmountDropdown.onValueChanged.AddListener(ValueChanged);
 			_startGameButton.onClick.AddListener(ChangeScene);
@@ -30,7 +30,7 @@ namespace _Scripts
 
 		private void ValueChanged(int newValue)
 		{
-			_gameData.PlayerAmount = newValue + 2;
+			_gameDataSo.PlayerAmount = newValue + 2;
 		}
 
 		private void ChangeScene()

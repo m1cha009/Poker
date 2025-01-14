@@ -15,7 +15,8 @@ namespace _Scripts
 	{
 		[SerializeField] private Button _menuButton;
 		[SerializeField] private Button _dealCardsButton;
-		[SerializeField] private GameData _gameData;
+		[SerializeField] private GameDataSo _gameDataSo;
+		[SerializeField] private PlayerNamesSo _playerNamesSo;
 		[SerializeField] private Player _playerPrefab;
 		[SerializeField] private List<GameObject> _playerPos;
 		[SerializeField] private PokerManager _pokerManager;
@@ -37,7 +38,7 @@ namespace _Scripts
 
 		private void Start()
 		{
-			_playerAmount = _gameData.PlayerAmount;
+			_playerAmount = _gameDataSo.PlayerAmount;
 			
 			_menuButton.onClick.AddListener(OnMenuClick);
 			_dealCardsButton.onClick.AddListener(OnDealCardsClick);
@@ -62,6 +63,7 @@ namespace _Scripts
 			{
 				var player = Instantiate(_playerPrefab, _playerPos[i].transform);
 				player.ClearCards();
+				player.SetPlayerName(_playerNamesSo.PlayerNames[i]);
 				
 				_players.Add(player);
 			}

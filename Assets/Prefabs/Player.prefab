@@ -375,6 +375,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _card1: {fileID: 5463190195252151049}
   _card2: {fileID: 5575275030611822727}
+  _playerNameText: {fileID: 8182492896156923342}
 --- !u!1 &7495524590379812494
 GameObject:
   m_ObjectHideFlags: 0

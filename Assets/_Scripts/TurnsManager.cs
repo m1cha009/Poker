@@ -7,7 +7,6 @@ namespace _Scripts
 {
 	public class TurnsManager : MonoBehaviour
 	{
-		[SerializeField] private PokerManager _pokerManager;
 		[SerializeField] private PlayerActionsManager _playerActionsManager;
 		
 		private List<Player> _activePlayers = new();
@@ -46,7 +45,8 @@ namespace _Scripts
 			
 			TriggerActionVisibility(true);
 			
-			DisplayPlayer(_currentPlayerIndex);
+			var playerName = _basePlayers[_currentPlayerIndex].GetPlayerName();
+			_playerActionsManager.SetPlayerInfo(playerName);
 		}
 
 		public void TriggerActionVisibility(bool isVisible)
@@ -76,20 +76,13 @@ namespace _Scripts
 		{
 			_currentPlayerIndex++;
 
-			if (_currentPlayerIndex < _basePlayers.Count)
-			{
-				DisplayPlayer(_currentPlayerIndex);
-			}
-			else
+			if (_currentPlayerIndex >= _basePlayers.Count)
 			{
 				ChangeTableStage();
 			}
-		}
-
-		private void DisplayPlayer(int index)
-		{
-			_basePlayers[index].DisplayCards();
-			_playerActionsManager.SetPlayerInfo(index);
+			
+			var playerName = _basePlayers[_currentPlayerIndex].GetPlayerName();
+			_playerActionsManager.SetPlayerInfo(playerName);
 		}
 
 		private void ChangeTableStage()

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using _Scripts.Helpers;
+using TMPro;
 using UnityEngine;
 
 namespace _Scripts
@@ -8,9 +9,11 @@ namespace _Scripts
 	{
 		[SerializeField] private CardComponent _card1;
 		[SerializeField] private CardComponent _card2;
+		[SerializeField] private TMP_Text _playerNameText;
 
 		private bool _isFirst = true;
 		private readonly List<Card> _playerCards = new();
+		private string _playerName;
 
 		public void SetCard(Card card)
 		{
@@ -52,5 +55,13 @@ namespace _Scripts
 			_card1.SetDefaultCardImage();
 			_card2.SetDefaultCardImage();
 		}
+
+		public void SetPlayerName(string name)
+		{
+			_playerNameText.SetText(name);
+			_playerName = name;
+		}
+
+		public string GetPlayerName() => _playerName;
 	}
 }

@@ -21,9 +21,9 @@ namespace _Scripts
 			OnFoldClick?.Invoke();
 		}
 
-		public void SetPlayerInfo(int playerIndex)
+		public void SetPlayerInfo(string name)
 		{
-			_playerInfoText.SetText($"Player {playerIndex+1} turn");
+			_playerInfoText.SetText($"{name} turn");
 		}
 	}
 }

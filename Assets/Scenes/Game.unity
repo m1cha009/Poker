@@ -152,7 +152,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _menuButton: {fileID: 1537087166}
   _dealCardsButton: {fileID: 672180231}
-  _gameData: {fileID: 11400000, guid: 4f8ae13012a677c47ac2b8bf305abe0d, type: 2}
+  _gameDataSo: {fileID: 11400000, guid: 4f8ae13012a677c47ac2b8bf305abe0d, type: 2}
+  _playerNamesSo: {fileID: 11400000, guid: 6fa309abfaf8abb4381b1c1bac73637c, type: 2}
   _playerPrefab: {fileID: 1160554910991691727, guid: bf9b0d5c48c95bc4db9d31712aeb5eb6, type: 3}
   _playerPos:
   - {fileID: 665429193}
@@ -261,7 +262,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0644a9f415d4602af2198a6538cf264, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pokerManager: {fileID: 0}
   _playerActionsManager: {fileID: 1130292217}
 --- !u!1 &80543797
 GameObject:

@@ -1003,7 +1003,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerAmountDropdown: {fileID: 1840282415}
   _startGameButton: {fileID: 1533568847}
-  _gameData: {fileID: 11400000, guid: 4f8ae13012a677c47ac2b8bf305abe0d, type: 2}
+  _gameDataSo: {fileID: 11400000, guid: 4f8ae13012a677c47ac2b8bf305abe0d, type: 2}
 --- !u!1 &1165301628
 GameObject:
   m_ObjectHideFlags: 0
