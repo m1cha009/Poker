@@ -17,16 +17,14 @@ namespace _Scripts
 
 		private void Start()
 		{
-			_playerActionsManager.OnCallClick += OnCallClickEvent;
-			_playerActionsManager.OnFoldClick += OnFoldClickEvent;
-			
 			TriggerActionVisibility(false);
+			
+			_playerActionsManager.OnStageActionClick += PlayerActionsManagerOnOnStageActionClick;
 		}
 
 		private void OnDestroy()
 		{
-			_playerActionsManager.OnCallClick -= OnCallClickEvent;
-			_playerActionsManager.OnFoldClick -= OnFoldClickEvent;
+			_playerActionsManager.OnStageActionClick -= PlayerActionsManagerOnOnStageActionClick;
 		}
 
 		public void Initialize(List<Player> players)
@@ -50,29 +48,6 @@ namespace _Scripts
 		public void TriggerActionVisibility(bool isVisible)
 		{
 			_playerActionsManager.gameObject.SetActive(isVisible);
-		}
-
-		private void OnCallClickEvent()
-		{
-			// _activePlayers.Add(_basePlayers[_currentPlayerIndex]);
-
-			var playerName = _activePlayers[_currentPlayerIndex].GetPlayerName();
-			Debug.Log($"{playerName} Called");
-
-			PlayerActionClick();
-		}
-		
-		private void OnFoldClickEvent()
-		{
-			var playerName = _activePlayers[_currentPlayerIndex].GetPlayerName();
-			_activePlayers[_currentPlayerIndex].ClearCards();
-			_activePlayers.RemoveAt(_currentPlayerIndex);
-
-			_currentPlayerIndex--;
-			
-			Debug.Log($"{playerName} Folded");
-			
-			PlayerActionClick();
 		}
 
 		private void PlayerActionClick()
@@ -104,6 +79,34 @@ namespace _Scripts
 			OnTableStateChanged?.Invoke(_currentTableStage);
 			
 			_currentPlayerIndex = 0;
+		}
+		
+		private void PlayerActionsManagerOnOnStageActionClick(PlayerStageAction playerStageAction)
+		{
+			var playerName = _activePlayers[_currentPlayerIndex].GetPlayerName();
+			
+			switch (playerStageAction)
+			{
+				case PlayerStageAction.Call:
+					Debug.Log($"{playerName} Called");
+					
+					break;
+				case PlayerStageAction.Fold:
+					_activePlayers[_currentPlayerIndex].ClearCards();
+					_activePlayers.RemoveAt(_currentPlayerIndex);
+
+					_currentPlayerIndex--;
+			
+					Debug.Log($"{playerName} Folded");
+					
+					break;
+				case PlayerStageAction.Bet:
+					break;
+				case PlayerStageAction.Check:
+					break;
+			}
+			
+			PlayerActionClick();
 		}
 	}
 }
