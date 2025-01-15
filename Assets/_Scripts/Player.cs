@@ -10,6 +10,8 @@ namespace _Scripts
 		[SerializeField] private CardComponent _card1;
 		[SerializeField] private CardComponent _card2;
 		[SerializeField] private TMP_Text _playerNameText;
+		[SerializeField] private GameObject _sbBlind;
+		[SerializeField] private GameObject _bbBlind;
 
 		private bool _isFirst = true;
 		private readonly List<Card> _playerCards = new();
@@ -63,5 +65,27 @@ namespace _Scripts
 		}
 
 		public string GetPlayerName() => _playerName;
+
+		public void TriggerBlind(bool isOn, bool isBB = false)
+		{
+			if (!isOn)
+			{
+				_sbBlind.SetActive(false);
+				_bbBlind.SetActive(false);
+				
+				return;
+			}
+
+			if (isBB)
+			{
+				_sbBlind.SetActive(false);
+				_bbBlind.SetActive(true);
+			}
+			else
+			{
+				_sbBlind.SetActive(true);
+				_bbBlind.SetActive(false);
+			}
+		}
 	}
 }

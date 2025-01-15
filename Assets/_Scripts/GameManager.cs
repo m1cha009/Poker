@@ -8,6 +8,7 @@ using _Scripts.SO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace _Scripts
 {
@@ -30,6 +31,7 @@ namespace _Scripts
 		private const string SceneNameString = "Menu";
 		private readonly List<CardComponent> _tableCardsComponent = new();
 		private List<Card> _tableCards = new();
+		private int _entryPlayerIndex;
 
 		private void Awake()
 		{
@@ -44,6 +46,8 @@ namespace _Scripts
 			_dealCardsButton.onClick.AddListener(OnDealCardsClick);
 			
 			_turnsManager.OnTableStateChanged += OnTableStateChanged;
+			
+			_entryPlayerIndex = Random.Range(0, _playerAmount);
 			
 			InitializePlayers();
 			InitializeTableCards();
@@ -86,15 +90,22 @@ namespace _Scripts
 		{
 			SceneManager.LoadScene(SceneNameString);
 		}
-		
+
 		private void OnDealCardsClick()
 		{
 			ClearTableCards();
 			_pokerManager.ShuffleCards();
 			
-			foreach (var player in _playersAtTable)
+			var activePlayersList = new List<Player>();
+			
+			for (var i = 0; i < _playersAtTable.Count; i++)
 			{
+				var currentIndex = (_entryPlayerIndex + i) % _playersAtTable.Count;
+
+				var player = _playersAtTable[currentIndex];
+				
 				player.ClearCards();
+				player.TriggerBlind(false);
 				
 				var cards = _pokerManager.DealCards();
 
@@ -103,10 +114,22 @@ namespace _Scripts
 					player.SetCard(card);
 				}
 				
+				if (i == _playersAtTable.Count - 2)
+				{
+					player.TriggerBlind(true, false);
+				}
+				else if (i == _playersAtTable.Count - 1)
+				{
+					player.TriggerBlind(true, true);
+				}
+				
 				player.DisplayCards();
+				
+				activePlayersList.Add(player);
 			}
-
-			_turnsManager.Initialize(_playersAtTable);
+			
+			_turnsManager.Initialize(activePlayersList);
+			_entryPlayerIndex++;
 		}
 
 		private void OnTableStateChanged(TableStage tableStage)

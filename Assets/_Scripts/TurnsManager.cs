@@ -29,14 +29,13 @@ namespace _Scripts
 
 		public void Initialize(List<Player> players)
 		{
-			_activePlayers = new List<Player>(players);
+			_activePlayers = players;
 			
 			if (_activePlayers == null || _activePlayers.Count == 0)
 			{
 				return;
 			}
 
-			_currentPlayerIndex = 0;
 			_currentTableStage = TableStage.PreFlop;
 			
 			TriggerActionVisibility(true);
@@ -48,26 +47,6 @@ namespace _Scripts
 		public void TriggerActionVisibility(bool isVisible)
 		{
 			_playerActionsManager.gameObject.SetActive(isVisible);
-		}
-
-		private void PlayerActionClick()
-		{
-			_currentPlayerIndex++;
-
-			if (_activePlayers.Count == 1)
-			{
-				OnTableStateChanged?.Invoke(TableStage.PreFlop);
-				
-				return;
-			}
-
-			if (_currentPlayerIndex >= _activePlayers.Count)
-			{
-				ChangeTableStage();
-			}
-			
-			var playerName = _activePlayers[_currentPlayerIndex].GetPlayerName();
-			_playerActionsManager.SetPlayerInfo(playerName);
 		}
 		
 		public List<Player> GetActivePlayers() => _activePlayers;
@@ -90,12 +69,12 @@ namespace _Scripts
 				case PlayerStageAction.Call:
 					Debug.Log($"{playerName} Called");
 					
+					_currentPlayerIndex++;
+					
 					break;
 				case PlayerStageAction.Fold:
 					_activePlayers[_currentPlayerIndex].ClearCards();
 					_activePlayers.RemoveAt(_currentPlayerIndex);
-
-					_currentPlayerIndex--;
 			
 					Debug.Log($"{playerName} Folded");
 					
@@ -107,6 +86,24 @@ namespace _Scripts
 			}
 			
 			PlayerActionClick();
+		}
+		
+		private void PlayerActionClick()
+		{
+			if (_activePlayers.Count == 1)
+			{
+				OnTableStateChanged?.Invoke(TableStage.PreFlop);
+				
+				return;
+			}
+
+			if (_currentPlayerIndex >= _activePlayers.Count)
+			{
+				ChangeTableStage();
+			}
+			
+			var playerName = _activePlayers[_currentPlayerIndex].GetPlayerName();
+			_playerActionsManager.SetPlayerInfo(playerName);
 		}
 	}
 }
