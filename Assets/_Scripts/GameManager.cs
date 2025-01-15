@@ -26,7 +26,7 @@ namespace _Scripts
 		private TurnsManager _turnsManager;
 
 		private int _playerAmount;
-		private readonly List<Player> _players = new();
+		private readonly List<Player> _playersAtTable = new();
 		private const string SceneNameString = "Menu";
 		private readonly List<CardComponent> _tableCardsComponent = new();
 		private List<Card> _tableCards = new();
@@ -43,7 +43,7 @@ namespace _Scripts
 			_menuButton.onClick.AddListener(OnMenuClick);
 			_dealCardsButton.onClick.AddListener(OnDealCardsClick);
 			
-			_turnsManager.OnChangeTableStage += OnTableStateChanged;
+			_turnsManager.OnTableStateChanged += OnTableStateChanged;
 			
 			InitializePlayers();
 			InitializeTableCards();
@@ -54,7 +54,7 @@ namespace _Scripts
 			_menuButton.onClick.RemoveListener(OnMenuClick);
 			_dealCardsButton.onClick.RemoveListener(OnDealCardsClick);
 			
-			_turnsManager.OnChangeTableStage -= OnTableStateChanged;
+			_turnsManager.OnTableStateChanged -= OnTableStateChanged;
 		}
 
 		private void InitializePlayers()
@@ -65,7 +65,7 @@ namespace _Scripts
 				player.ClearCards();
 				player.SetPlayerName(_playerNamesSo.PlayerNames[i]);
 				
-				_players.Add(player);
+				_playersAtTable.Add(player);
 			}
 		}
 
@@ -92,7 +92,7 @@ namespace _Scripts
 			ClearTableCards();
 			_pokerManager.ShuffleCards();
 			
-			foreach (var player in _players)
+			foreach (var player in _playersAtTable)
 			{
 				player.ClearCards();
 				
@@ -106,7 +106,7 @@ namespace _Scripts
 				player.DisplayCards();
 			}
 
-			_turnsManager.Initialize(_players);
+			_turnsManager.Initialize(_playersAtTable);
 		}
 
 		private void OnTableStateChanged(TableStage tableStage)
@@ -115,7 +115,22 @@ namespace _Scripts
 			
 			if (tableStage == TableStage.PreFlop)
 			{
-				CheckWinner();
+				var activePlayers = _turnsManager.GetActivePlayers();
+
+				if (activePlayers == null || activePlayers.Count == 0)
+				{
+					return;
+				}
+
+				if (activePlayers.Count == 1)
+				{
+					Debug.Log($"{activePlayers.First().GetPlayerName()} Won");
+				}
+				else
+				{
+					CheckWinner(activePlayers);
+				}
+				
 				_turnsManager.TriggerActionVisibility(false);
 				
 				return;
@@ -167,18 +182,13 @@ namespace _Scripts
 				k++;
 			}
 		}
-		
-		private void OnWinnerClick()
-		{
-			CheckWinner();
-		}
 
-		private void CheckWinner()
+		private void CheckWinner(List<Player> activePlayers)
 		{
 			ClearConsole();
 			Dictionary<Player, BestPlayerHand> handsDic = new();
 			
-			foreach (var player in _players)
+			foreach (var player in activePlayers)
 			{
 				var playerCards = player.GetPlayerCards();
 				var bestPlayerHand = _pokerManager.GetBestHand(playerCards);
@@ -223,7 +233,9 @@ namespace _Scripts
 					playerRankCards += $"{card.Rank}";
 				}
 
-				Debug.Log($"{k}. Player cards:[{playerRankCards}], Hand:{orderedHand.Value.Hand}, Best cards: {cardsValues}");
+				var playerName = orderedHand.Key.GetPlayerName();
+
+				Debug.Log($"{playerName} cards:[{playerRankCards}], Hand:{orderedHand.Value.Hand}, Best cards: {cardsValues}");
 				k++;
 			}
 		}

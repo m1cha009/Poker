@@ -9,13 +9,11 @@ namespace _Scripts
 	{
 		[SerializeField] private PlayerActionsManager _playerActionsManager;
 		
-		private List<Player> _activePlayers = new();
-		private List<Player> _basePlayers = new();
-
+		private List<Player> _activePlayers;
 		private int _currentPlayerIndex;
 		private TableStage _currentTableStage = TableStage.PreFlop;
 
-		public event Action<TableStage> OnChangeTableStage;
+		public event Action<TableStage> OnTableStateChanged;
 
 		private void Start()
 		{
@@ -33,9 +31,9 @@ namespace _Scripts
 
 		public void Initialize(List<Player> players)
 		{
-			_basePlayers = players;
+			_activePlayers = new List<Player>(players);
 			
-			if (_basePlayers == null || _basePlayers.Count == 0)
+			if (_activePlayers == null || _activePlayers.Count == 0)
 			{
 				return;
 			}
@@ -45,7 +43,7 @@ namespace _Scripts
 			
 			TriggerActionVisibility(true);
 			
-			var playerName = _basePlayers[_currentPlayerIndex].GetPlayerName();
+			var playerName = _activePlayers[_currentPlayerIndex].GetPlayerName();
 			_playerActionsManager.SetPlayerInfo(playerName);
 		}
 
@@ -57,17 +55,22 @@ namespace _Scripts
 		private void OnCallClickEvent()
 		{
 			// _activePlayers.Add(_basePlayers[_currentPlayerIndex]);
-			
-			Debug.Log($"player {_currentPlayerIndex} called");
+
+			var playerName = _activePlayers[_currentPlayerIndex].GetPlayerName();
+			Debug.Log($"{playerName} Called");
 
 			PlayerActionClick();
 		}
 		
 		private void OnFoldClickEvent()
 		{
-			_basePlayers[_currentPlayerIndex].ClearCards();
+			var playerName = _activePlayers[_currentPlayerIndex].GetPlayerName();
+			_activePlayers[_currentPlayerIndex].ClearCards();
+			_activePlayers.RemoveAt(_currentPlayerIndex);
+
+			_currentPlayerIndex--;
 			
-			Debug.Log($"player {_currentPlayerIndex} folded");
+			Debug.Log($"{playerName} Folded");
 			
 			PlayerActionClick();
 		}
@@ -76,20 +79,29 @@ namespace _Scripts
 		{
 			_currentPlayerIndex++;
 
-			if (_currentPlayerIndex >= _basePlayers.Count)
+			if (_activePlayers.Count == 1)
+			{
+				OnTableStateChanged?.Invoke(TableStage.PreFlop);
+				
+				return;
+			}
+
+			if (_currentPlayerIndex >= _activePlayers.Count)
 			{
 				ChangeTableStage();
 			}
 			
-			var playerName = _basePlayers[_currentPlayerIndex].GetPlayerName();
+			var playerName = _activePlayers[_currentPlayerIndex].GetPlayerName();
 			_playerActionsManager.SetPlayerInfo(playerName);
 		}
+		
+		public List<Player> GetActivePlayers() => _activePlayers;
 
 		private void ChangeTableStage()
 		{
 			_currentTableStage = (int)_currentTableStage + 1 >= Enum.GetValues(typeof(TableStage)).Length ? 0 : _currentTableStage + 1;
 			
-			OnChangeTableStage?.Invoke(_currentTableStage);
+			OnTableStateChanged?.Invoke(_currentTableStage);
 			
 			_currentPlayerIndex = 0;
 		}
