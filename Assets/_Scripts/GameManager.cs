@@ -17,7 +17,7 @@ namespace _Scripts
 		[SerializeField] private Button _menuButton;
 		[SerializeField] private Button _dealCardsButton;
 		[SerializeField] private GameDataSo _gameDataSo;
-		[SerializeField] private PlayerNamesSo _playerNamesSo;
+		[SerializeField] private PlayersDataSo _playerDataSo;
 		[SerializeField] private Player _playerPrefab;
 		[SerializeField] private List<GameObject> _playerPos;
 		[SerializeField] private PokerManager _pokerManager;
@@ -67,7 +67,7 @@ namespace _Scripts
 			{
 				var player = Instantiate(_playerPrefab, _playerPos[i].transform);
 				player.ClearCards();
-				player.SetPlayerName(_playerNamesSo.PlayerNames[i]);
+				player.SetPlayerName(_playerDataSo.PlayersData[i].Name);
 				
 				_playersAtTable.Add(player);
 			}
