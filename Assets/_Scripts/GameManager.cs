@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using _Scripts.Data;
 using _Scripts.Enums;
 using _Scripts.Helpers;
 using _Scripts.SO;
@@ -30,7 +31,7 @@ namespace _Scripts
 		private readonly List<Player> _playersAtTable = new();
 		private const string SceneNameString = "Menu";
 		private readonly List<CardComponent> _tableCardsComponent = new();
-		private List<Card> _tableCards = new();
+		private List<CardData> _tableCards = new();
 		private int _entryPlayerIndex;
 
 		private void Awake()
@@ -222,7 +223,7 @@ namespace _Scripts
 			// decide which player has best hand
 
 			var orderedByHandSet = handsDic.OrderByDescending(x => x.Value.Hand)
-				.ThenByDescending(x => x.Value.Cards, Comparer<List<Card>>.Create((x, y) =>
+				.ThenByDescending(x => x.Value.Cards, Comparer<List<CardData>>.Create((x, y) =>
 				{
 					for (var i = 0; i < Math.Min(x.Count, y.Count); i++)
 					{

@@ -1,8 +1,8 @@
 using _Scripts.Enums;
 
-namespace _Scripts
+namespace _Scripts.Data
 {
-	public class Card
+	public class CardData
 	{
 		public Suit Suit;
 		public Rank Rank;

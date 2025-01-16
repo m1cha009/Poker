@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using _Scripts.Data;
 using UnityEngine;
 
 namespace _Scripts.Helpers
@@ -17,9 +18,9 @@ namespace _Scripts.Helpers
 			}
 		}
 
-		public static Sprite GetCardSprite(Card card)
+		public static Sprite GetCardSprite(CardData cardData)
 		{
-			var keyString = $"card{card.Suit}{card.Rank}";
+			var keyString = $"card{cardData.Suit}{cardData.Rank}";
 			var cardSprite = _cardsSpritesDic.GetValueOrDefault(keyString);
 				
 			if (cardSprite == null)

@@ -1,15 +1,16 @@
 using System.Collections.Generic;
 using System.Linq;
+using _Scripts.Data;
 using _Scripts.Enums;
 
 namespace _Scripts
 {
 	public class HandEvaluator
 	{
-		public BestPlayerHand EvaluateHand(List<Card> playerCards, List<Card> tableCards)
+		public BestPlayerHand EvaluateHand(List<CardData> playerCards, List<CardData> tableCards)
 		{
 			var bestHand = new BestPlayerHand();
-			var allCardsList = new List<Card>();
+			var allCardsList = new List<CardData>();
 			allCardsList.AddRange(playerCards);
 			allCardsList.AddRange(tableCards);
 
@@ -61,7 +62,7 @@ namespace _Scripts
 			return null;
 		}
 
-		private bool IsFlushStraight(List<Card> allCardsList, out BestPlayerHand bestHand)
+		private bool IsFlushStraight(List<CardData> allCardsList, out BestPlayerHand bestHand)
 		{
 			bestHand = new BestPlayerHand();
 			
@@ -95,7 +96,7 @@ namespace _Scripts
 			return true;
 		}
 
-		private bool IsFullHouse(List<Card> allCardsList, out BestPlayerHand bestFullHouse)
+		private bool IsFullHouse(List<CardData> allCardsList, out BestPlayerHand bestFullHouse)
 		{
 			bestFullHouse = new BestPlayerHand();
 
@@ -117,7 +118,7 @@ namespace _Scripts
 			return false;
 		}
 
-		private bool IsFlush(List<Card> allCardsList, out BestPlayerHand tempBestHand)
+		private bool IsFlush(List<CardData> allCardsList, out BestPlayerHand tempBestHand)
 		{
 			tempBestHand = new BestPlayerHand();
 			
@@ -144,7 +145,7 @@ namespace _Scripts
 			return true;
 		}
 
-		private bool IsStraight(List<Card> allCardsList, out BestPlayerHand tempBestHand)
+		private bool IsStraight(List<CardData> allCardsList, out BestPlayerHand tempBestHand)
 		{
 			tempBestHand = new BestPlayerHand();
 			
@@ -158,7 +159,7 @@ namespace _Scripts
 				return false;
 			}
 
-			var straightSequence = new List<Card>();
+			var straightSequence = new List<CardData>();
 
 			foreach (var card in orderedCards)
 			{
@@ -194,7 +195,7 @@ namespace _Scripts
 			return false;
 		}
 
-		private bool IsFourOfKind(List<Card> allCardsList, out BestPlayerHand bestFourOfKind)
+		private bool IsFourOfKind(List<CardData> allCardsList, out BestPlayerHand bestFourOfKind)
 		{
 			bestFourOfKind = new BestPlayerHand();
 
@@ -215,7 +216,7 @@ namespace _Scripts
 			return false;
 		}
 
-		private bool IsThreeOfKind(List<Card> allCardsList, out BestPlayerHand bestThreeOfKind)
+		private bool IsThreeOfKind(List<CardData> allCardsList, out BestPlayerHand bestThreeOfKind)
 		{
 			bestThreeOfKind = new BestPlayerHand();
 
@@ -236,12 +237,12 @@ namespace _Scripts
 			return false;
 		}
 
-		private bool IsPairs(List<Card> allCardsList, out BestPlayerHand bestPlayerHand)
+		private bool IsPairs(List<CardData> allCardsList, out BestPlayerHand bestPlayerHand)
 		{
 			bestPlayerHand = new BestPlayerHand();
 			
-			var pairsList = new List<Card>();
-			var remainingTableCards = new List<Card>();
+			var pairsList = new List<CardData>();
+			var remainingTableCards = new List<CardData>();
 			
 			for (var i = 0; i < allCardsList.Count; i++)
 			{
@@ -308,7 +309,7 @@ namespace _Scripts
 			return false;
 		}
 		
-		private bool IsHighestCard(List<Card> allCardsList, out BestPlayerHand bestPlayerHand)
+		private bool IsHighestCard(List<CardData> allCardsList, out BestPlayerHand bestPlayerHand)
 		{
 			bestPlayerHand = new BestPlayerHand();
 			
@@ -320,7 +321,7 @@ namespace _Scripts
 			return true;
 		}
 		
-		private List<Card> FindHighestXOfKind(List<Card> cards, int amount)
+		private List<CardData> FindHighestXOfKind(List<CardData> cards, int amount)
 		{
 			var grouped = cards.GroupBy(card => card.Rank)
 				.Where(group => group.Count() == amount)
@@ -331,10 +332,10 @@ namespace _Scripts
 				return grouped.First().ToList();
 			}
 
-			return new List<Card>();
+			return new List<CardData>();
 		}
 
-		private List<Card> FindHighestPair(List<Card> cards)
+		private List<CardData> FindHighestPair(List<CardData> cards)
 		{
 			var groupedCards = cards.GroupBy(card => card.Rank)
 				.Where(group => group.Count() >= 2)
@@ -342,7 +343,7 @@ namespace _Scripts
 
 			if (!groupedCards.Any())
 			{
-				return new List<Card>();
+				return new List<CardData>();
 			}
 
 			var orderedCards = groupedCards.OrderByDescending(group => group.Key)
@@ -353,7 +354,7 @@ namespace _Scripts
 			return orderedCards;
 		}
 		
-		private bool IsCardsInSequence(List<Card> cards)
+		private bool IsCardsInSequence(List<CardData> cards)
 		{
 			var orderedCards = cards.OrderByDescending(card => card.Rank).ToList();
 

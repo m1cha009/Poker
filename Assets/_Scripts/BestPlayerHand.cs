@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using _Scripts.Data;
 using _Scripts.Enums;
 
 namespace _Scripts
@@ -6,6 +7,6 @@ namespace _Scripts
 	public class BestPlayerHand
 	{
 		public HandsSet Hand { get; set; }
-		public List<Card> Cards { get; set; } = new();
+		public List<CardData> Cards { get; set; } = new();
 	}
 }

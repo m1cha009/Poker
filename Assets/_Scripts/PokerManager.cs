@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using _Scripts.Data;
 using _Scripts.Enums;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -8,10 +9,10 @@ namespace _Scripts
 {
 	public class PokerManager : MonoBehaviour
 	{
-		private readonly Card[] _cards = new Card[52];
-		private readonly Stack<Card> _cardsStack = new();
+		private readonly CardData[] _cards = new CardData[52];
+		private readonly Stack<CardData> _cardsStack = new();
 		private readonly HandEvaluator _handEvaluator = new();
-		private readonly List<Card> _tableCards = new();
+		private readonly List<CardData> _tableCards = new();
 
 		private void Start()
 		{
@@ -20,7 +21,7 @@ namespace _Scripts
 			Debug.Log("Cards initialized");
 		}
 
-		public Card[] DealCards()
+		public CardData[] DealCards()
 		{
 			var card = _cardsStack.Pop();
 			var card2 = _cardsStack.Pop();
@@ -30,7 +31,7 @@ namespace _Scripts
 			return new[] { card, card2 };
 		}
 
-		public List<Card> DealFlop()
+		public List<CardData> DealFlop()
 		{
 			_tableCards.Clear();
 
@@ -43,7 +44,7 @@ namespace _Scripts
 			return _tableCards;
 		}
 
-		public Card DealTurn()
+		public CardData DealTurn()
 		{
 			var card = _cardsStack.Pop();
 			_tableCards.Add(card);
@@ -51,7 +52,7 @@ namespace _Scripts
 			return card;
 		}
 		
-		public Card DealRiver()
+		public CardData DealRiver()
 		{
 			var card = _cardsStack.Pop();
 			_tableCards.Add(card);
@@ -59,7 +60,7 @@ namespace _Scripts
 			return card;
 		}
 
-		public BestPlayerHand GetBestHand(List<Card> playerCards)
+		public BestPlayerHand GetBestHand(List<CardData> playerCards)
 		{
 			return _handEvaluator.EvaluateHand(playerCards, _tableCards);
 		}
@@ -83,9 +84,9 @@ namespace _Scripts
 			Debug.Log("Cards shuffled");
 		}
 		
-		private List<Card> FourthOKindCards()
+		private List<CardData> FourthOKindCards()
 		{
-			var cards = new List<Card>()
+			var cards = new List<CardData>()
 			{
 				new() { Suit = Suit.Clubs, Rank = Rank._2 },
 				new() { Suit = Suit.Diamonds, Rank = Rank._2 },
@@ -115,9 +116,9 @@ namespace _Scripts
 			return cards;
 		}
 
-		private List<Card> StraightCards()
+		private List<CardData> StraightCards()
 		{
-			var cards = new List<Card>()
+			var cards = new List<CardData>()
 			{
 				new() { Suit = Suit.Spades, Rank = Rank._Q },
 				new() { Suit = Suit.Spades, Rank = Rank._J },
@@ -147,9 +148,9 @@ namespace _Scripts
 			return cards;
 		}
 
-		private List<Card> FullHouseCards()
+		private List<CardData> FullHouseCards()
 		{
-			var cards = new List<Card>()
+			var cards = new List<CardData>()
 			{
 				new() { Suit = Suit.Spades, Rank = Rank._8 },
 				new() { Suit = Suit.Spades, Rank = Rank._4 },
@@ -192,7 +193,7 @@ namespace _Scripts
 			{
 				foreach (var rank in Enum.GetValues(typeof(Rank)))
 				{
-					_cards[k] = new Card
+					_cards[k] = new CardData
 					{
 						Suit = (Suit)suit,
 						Rank = (Rank)rank,

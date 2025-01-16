@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using _Scripts.Data;
 using _Scripts.Helpers;
 using TMPro;
 using UnityEngine;
@@ -12,12 +13,13 @@ namespace _Scripts
 		[SerializeField] private TMP_Text _playerNameText;
 		[SerializeField] private GameObject _sbBlind;
 		[SerializeField] private GameObject _bbBlind;
+		[SerializeField] private TMP_Text _moneyText;
 
 		private bool _isFirst = true;
-		private readonly List<Card> _playerCards = new();
+		private readonly List<CardData> _playerCards = new();
 		private string _playerName;
 
-		public void SetCard(Card card)
+		public void SetCard(CardData cardData)
 		{
 			if (_playerCards.Count >= 2)
 			{
@@ -25,10 +27,10 @@ namespace _Scripts
 				return;
 			}
 			
-			_playerCards.Add(card);
+			_playerCards.Add(cardData);
 		}
 
-		public List<Card> GetPlayerCards() => _playerCards;
+		public List<CardData> GetPlayerCards() => _playerCards;
 
 		public void DisplayCards()
 		{
@@ -86,6 +88,11 @@ namespace _Scripts
 				_sbBlind.SetActive(true);
 				_bbBlind.SetActive(false);
 			}
+		}
+
+		public void SetPlayerMoney(int money)
+		{
+			_moneyText.SetText($"€{money}");
 		}
 	}
 }
