@@ -7,6 +7,6 @@ namespace _Scripts.Data
 	public class PlayerData
 	{
 		[field: SerializeField] public string Name { get; private set; }
-		[field: SerializeField] public float Money { get; private set; }
+		[field: SerializeField] public float Money { get; set; }
 	}
 }

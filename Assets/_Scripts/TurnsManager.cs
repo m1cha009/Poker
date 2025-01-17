@@ -12,19 +12,25 @@ namespace _Scripts
 		private List<Player> _activePlayers;
 		private int _currentPlayerIndex;
 		private TableStage _currentTableStage = TableStage.PreFlop;
+		private MoneyManager _moneyManager;
 
 		public event Action<TableStage> OnTableStateChanged;
+
+		private void Awake()
+		{
+			TryGetComponent(out _moneyManager);
+		}
 
 		private void Start()
 		{
 			TriggerActionVisibility(false);
 			
-			_playerActionsManager.OnStageActionClick += PlayerActionsManagerOnOnStageActionClick;
+			_playerActionsManager.OnStageActionClick += OnStageActionClickEvent;
 		}
 
 		private void OnDestroy()
 		{
-			_playerActionsManager.OnStageActionClick -= PlayerActionsManagerOnOnStageActionClick;
+			_playerActionsManager.OnStageActionClick -= OnStageActionClickEvent;
 		}
 
 		public void Initialize(List<Player> players)
@@ -40,11 +46,11 @@ namespace _Scripts
 			
 			TriggerActionVisibility(true);
 			
-			var playerName = _activePlayers[_currentPlayerIndex].GetPlayerName();
+			var playerName = _activePlayers[_currentPlayerIndex].PlayerName;
 			_playerActionsManager.SetPlayerInfo(playerName);
 		}
 
-		public void TriggerActionVisibility(bool isVisible)
+		public void TriggerActionVisibility(bool isVisible) 
 		{
 			_playerActionsManager.gameObject.SetActive(isVisible);
 		}
@@ -60,14 +66,25 @@ namespace _Scripts
 			_currentPlayerIndex = 0;
 		}
 		
-		private void PlayerActionsManagerOnOnStageActionClick(PlayerStageAction playerStageAction)
+		private void OnStageActionClickEvent(PlayerStageAction playerStageAction)
 		{
-			var playerName = _activePlayers[_currentPlayerIndex].GetPlayerName();
+			var player = _activePlayers[_currentPlayerIndex];
 			
 			switch (playerStageAction)
 			{
 				case PlayerStageAction.Call:
-					Debug.Log($"{playerName} Called");
+					if (_moneyManager.PLayerBet(player, 2))
+					{
+						player.SetPlayMoneyText(2);
+					}
+					else
+					{
+						Debug.LogError($"{player.PlayerName} don't have enough money to call");
+						
+						return;
+					}
+
+					Debug.Log($"{player.PlayerName} Called");
 					
 					_currentPlayerIndex++;
 					
@@ -76,7 +93,7 @@ namespace _Scripts
 					_activePlayers[_currentPlayerIndex].ClearCards();
 					_activePlayers.RemoveAt(_currentPlayerIndex);
 			
-					Debug.Log($"{playerName} Folded");
+					Debug.Log($"{player.PlayerName} Folded");
 					
 					break;
 				case PlayerStageAction.Bet:
@@ -102,7 +119,7 @@ namespace _Scripts
 				ChangeTableStage();
 			}
 			
-			var playerName = _activePlayers[_currentPlayerIndex].GetPlayerName();
+			var playerName = _activePlayers[_currentPlayerIndex].PlayerName;
 			_playerActionsManager.SetPlayerInfo(playerName);
 		}
 	}

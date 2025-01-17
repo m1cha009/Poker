@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using _Scripts.Data;
 using _Scripts.Helpers;
@@ -13,11 +14,49 @@ namespace _Scripts
 		[SerializeField] private TMP_Text _playerNameText;
 		[SerializeField] private GameObject _sbBlind;
 		[SerializeField] private GameObject _bbBlind;
-		[SerializeField] private TMP_Text _moneyText;
+		[SerializeField] private TMP_Text _totalMoneyText;
+		[SerializeField] private TMP_Text _playMoneyText;
 
 		private bool _isFirst = true;
 		private readonly List<CardData> _playerCards = new();
 		private string _playerName;
+		private float _money;
+		
+		public string PlayerName
+		{
+			get => _playerName;
+			private set
+			{
+				SetNameText(value);
+				
+				_playerName = value;
+			}
+		}
+
+		public float Money
+		{
+			get => _money;
+			set
+			{
+				SetTotalMoneyText(value);
+				
+				_money = value;
+			}
+		}
+
+		private void Start()
+		{
+			_totalMoneyText.SetText(string.Empty);
+			_playMoneyText.SetText(string.Empty);
+		}
+
+		public void InitializePlayer(PlayerData playerData)
+		{
+			PlayerName = playerData.Name;
+			Money = playerData.Money;
+			
+			ClearCards();
+		}
 
 		public void SetCard(CardData cardData)
 		{
@@ -60,13 +99,17 @@ namespace _Scripts
 			_card2.SetDefaultCardImage();
 		}
 
-		public void SetPlayerName(string name)
+		public void SetPlayMoneyText(float value)
 		{
-			_playerNameText.SetText(name);
-			_playerName = name;
+			if (value == 0)
+			{
+				_playMoneyText.SetText(string.Empty);
+				
+				return;
+			}
+			
+			_playMoneyText.SetText($"€{value}");
 		}
-
-		public string GetPlayerName() => _playerName;
 
 		public void TriggerBlind(bool isOn, bool isBB = false)
 		{
@@ -89,10 +132,15 @@ namespace _Scripts
 				_bbBlind.SetActive(false);
 			}
 		}
-
-		public void SetPlayerMoney(int money)
+		
+		private void SetNameText(string playerName)
 		{
-			_moneyText.SetText($"€{money}");
+			_playerNameText.SetText(playerName);
+		}
+
+		private void SetTotalMoneyText(float money)
+		{
+			_totalMoneyText.SetText($"€{money}");
 		}
 	}
 }

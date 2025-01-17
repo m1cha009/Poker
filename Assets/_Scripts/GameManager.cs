@@ -67,8 +67,7 @@ namespace _Scripts
 			for (var i = 0; i < _playerAmount; i++)
 			{
 				var player = Instantiate(_playerPrefab, _playerPos[i].transform);
-				player.ClearCards();
-				player.SetPlayerName(_playerDataSo.PlayersData[i].Name);
+				player.InitializePlayer(_playerDataSo.PlayersData[i]);
 				
 				_playersAtTable.Add(player);
 			}
@@ -137,18 +136,19 @@ namespace _Scripts
 		{
 			Debug.Log($"OnTableStateChanged: {tableStage}");
 			
+			var activePlayers = _turnsManager.GetActivePlayers();
+			activePlayers.ForEach(player => player.SetPlayMoneyText(0));
+			
 			if (tableStage == TableStage.PreFlop)
 			{
-				var activePlayers = _turnsManager.GetActivePlayers();
-
-				if (activePlayers == null || activePlayers.Count == 0)
+				if (activePlayers.Count == 0)
 				{
 					return;
 				}
 
 				if (activePlayers.Count == 1)
 				{
-					Debug.Log($"{activePlayers.First().GetPlayerName()} Won");
+					Debug.Log($"{activePlayers.First().PlayerName} Won");
 				}
 				else
 				{
@@ -257,7 +257,7 @@ namespace _Scripts
 					playerRankCards += $"{card.Rank}";
 				}
 
-				var playerName = orderedHand.Key.GetPlayerName();
+				var playerName = orderedHand.Key.PlayerName;
 
 				Debug.Log($"{playerName} cards:[{playerRankCards}], Hand:{orderedHand.Value.Hand}, Best cards: {cardsValues}");
 				k++;

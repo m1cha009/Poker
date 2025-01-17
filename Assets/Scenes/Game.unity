@@ -277,6 +277,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _potValueText: {fileID: 254673023}
+  _callButtonText: {fileID: 1674146226}
 --- !u!1 &80543797
 GameObject:
   m_ObjectHideFlags: 0
