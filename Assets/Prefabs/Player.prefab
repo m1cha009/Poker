@@ -360,7 +360,7 @@ GameObject:
   - component: {fileID: 7475448874657674845}
   - component: {fileID: 8426132640798772218}
   m_Layer: 5
-  m_Name: Play Money Text
+  m_Name: InGame Money Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1077,7 +1077,7 @@ MonoBehaviour:
   _sbBlind: {fileID: 2534064965699344229}
   _bbBlind: {fileID: 3737262549050022132}
   _totalMoneyText: {fileID: 6864371032097665642}
-  _playMoneyText: {fileID: 8426132640798772218}
+  _inGameMoneyText: {fileID: 8426132640798772218}
 --- !u!1 &7495524590379812494
 GameObject:
   m_ObjectHideFlags: 0
