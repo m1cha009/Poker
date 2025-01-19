@@ -40,6 +40,7 @@ namespace _Scripts
 			if (_moneyManager.IsBet) // check if bet was made
 			{
 				// prepare buttons [Fold, Call BetSize, Raise]
+				_playerActionsManager.SetupButtons(ActionButtonStages.Fold | ActionButtonStages.Call | ActionButtonStages.Raise);
 			}
 			else if (_tableStagesManager.CurrentStage == TableStage.PreFlop) // check if preflop
 			{
@@ -48,15 +49,18 @@ namespace _Scripts
 				if (Mathf.Approximately(_moneyManager.CurrentBet, player.InGameMoney))
 				{
 					// prepare buttons [Fold, Check, Bet]
+					_playerActionsManager.SetupButtons(ActionButtonStages.Fold | ActionButtonStages.Check | ActionButtonStages.Bet);
 				}
 				else
 				{
 					// prepare buttons [Fold, Call BB, Bet]
+					_playerActionsManager.SetupButtons(ActionButtonStages.Fold | ActionButtonStages.Call | ActionButtonStages.Bet);
 				}
 			}
 			else
 			{
 				// prepare buttons [Fold, Check, Bet]
+				_playerActionsManager.SetupButtons(ActionButtonStages.Fold | ActionButtonStages.Check | ActionButtonStages.Bet);
 			}
 		}
 		
