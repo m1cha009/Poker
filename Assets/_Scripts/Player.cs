@@ -15,12 +15,13 @@ namespace _Scripts
 		[SerializeField] private GameObject _sbBlind;
 		[SerializeField] private GameObject _bbBlind;
 		[SerializeField] private TMP_Text _totalMoneyText;
-		[SerializeField] private TMP_Text _playMoneyText;
+		[SerializeField] private TMP_Text _inGameMoneyText;
 
 		private bool _isFirst = true;
 		private readonly List<CardData> _playerCards = new();
 		private string _playerName;
-		private float _money;
+		private float _totalMoney;
+		private float _inGameMoney;
 		
 		public string PlayerName
 		{
@@ -33,27 +34,33 @@ namespace _Scripts
 			}
 		}
 
-		public float Money
+		public float TotalMoney
 		{
-			get => _money;
+			get => _totalMoney;
 			set
 			{
 				SetTotalMoneyText(value);
 				
-				_money = value;
+				_totalMoney = value;
 			}
 		}
-
-		private void Start()
+		
+		public float InGameMoney
 		{
-			_totalMoneyText.SetText(string.Empty);
-			_playMoneyText.SetText(string.Empty);
+			get => _inGameMoney;
+			set
+			{
+				SetInGameMoneyText(value);
+				
+				_inGameMoney = value;
+			}
 		}
 
 		public void InitializePlayer(PlayerData playerData)
 		{
 			PlayerName = playerData.Name;
-			Money = playerData.Money;
+			TotalMoney = playerData.Money;
+			InGameMoney = 0;
 			
 			ClearCards();
 		}
@@ -91,6 +98,13 @@ namespace _Scripts
 			}
 		}
 
+		public void ClearPlayerState()
+		{
+			ClearCards();
+			TriggerBlind(false);
+			InGameMoney = 0;
+		}
+
 		public void ClearCards()
 		{
 			_playerCards.Clear();
@@ -99,16 +113,16 @@ namespace _Scripts
 			_card2.SetDefaultCardImage();
 		}
 
-		public void SetPlayMoneyText(float value)
+		private void SetInGameMoneyText(float value)
 		{
 			if (value == 0)
 			{
-				_playMoneyText.SetText(string.Empty);
+				_inGameMoneyText.SetText(string.Empty);
 				
 				return;
 			}
 			
-			_playMoneyText.SetText($"€{value}");
+			_inGameMoneyText.SetText($"€{value}");
 		}
 
 		public void TriggerBlind(bool isOn, bool isBB = false)

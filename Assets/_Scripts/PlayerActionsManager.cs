@@ -7,18 +7,18 @@ namespace _Scripts
 {
 	public class PlayerActionsManager : MonoBehaviour
 	{
-		public event Action<PlayerStageAction> OnStageActionClick;
+		public event Action<PlayerStage> OnStageActionClick;
 
 		[SerializeField] public TMP_Text _playerInfoText;
 		
 		public void CallClicked()
 		{
-			OnStageActionClick?.Invoke(PlayerStageAction.Call);
+			OnStageActionClick?.Invoke(PlayerStage.Call);
 		}
 
 		public void FoldClicked()
 		{
-			OnStageActionClick?.Invoke(PlayerStageAction.Fold);
+			OnStageActionClick?.Invoke(PlayerStage.Fold);
 		}
 
 		public void SetPlayerInfo(string name)

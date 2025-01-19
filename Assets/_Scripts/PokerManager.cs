@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using _Scripts.Data;
 using _Scripts.Enums;
 using UnityEngine;
@@ -202,6 +204,72 @@ namespace _Scripts
 					k++;
 				}
 			}
+		}
+		
+		public void CheckWinner(List<Player> activePlayers)
+		{
+			ClearConsole();
+			Dictionary<Player, BestPlayerHand> handsDic = new();
+			
+			foreach (var player in activePlayers)
+			{
+				var playerCards = player.GetPlayerCards();
+				var bestPlayerHand = GetBestHand(playerCards);
+				
+				handsDic.Add(player, bestPlayerHand);
+			}
+
+			// decide which player has best hand
+
+			var orderedByHandSet = handsDic.OrderByDescending(x => x.Value.Hand)
+				.ThenByDescending(x => x.Value.Cards, Comparer<List<CardData>>.Create((x, y) =>
+				{
+					for (var i = 0; i < Math.Min(x.Count, y.Count); i++)
+					{
+						if (x[i].Rank > y[i].Rank)
+						{
+							return 1;
+						}
+				
+						if (x[i].Rank < y[i].Rank)
+						{
+							return -1;
+						}
+					}
+
+					return 0;
+				}));
+			
+			var k = 1;
+			foreach (var orderedHand in orderedByHandSet)
+			{
+				var cardsValues = string.Empty;
+				foreach (var card in orderedHand.Value.Cards)
+				{
+					cardsValues += $"{card.Rank}";
+				}
+
+				var playerCards = orderedHand.Key.GetPlayerCards();
+				var playerRankCards = string.Empty;
+				foreach (var card in playerCards)
+				{
+					playerRankCards += $"{card.Rank}";
+				}
+
+				var playerName = orderedHand.Key.PlayerName;
+
+				Debug.Log($"{playerName} cards:[{playerRankCards}], Hand:{orderedHand.Value.Hand}, Best cards: {cardsValues}");
+				k++;
+			}
+		}
+		
+		private void ClearConsole()
+		{
+#if UNITY_EDITOR
+			var logEntries = Type.GetType("UnityEditor.LogEntries, UnityEditor.dll");
+			var clearMethod = logEntries?.GetMethod("Clear", BindingFlags.Static | BindingFlags.Public);
+			clearMethod?.Invoke(null, null);
+#endif
 		}
 	}
 }

@@ -132,6 +132,8 @@ GameObject:
   - component: {fileID: 58536022}
   - component: {fileID: 58536023}
   - component: {fileID: 58536024}
+  - component: {fileID: 58536025}
+  - component: {fileID: 58536026}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -263,7 +265,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0644a9f415d4602af2198a6538cf264, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerPrefab: {fileID: 1160554910991691727, guid: bf9b0d5c48c95bc4db9d31712aeb5eb6, type: 3}
+  _playerPos:
+  - {fileID: 665429193}
+  - {fileID: 1797012116}
+  - {fileID: 1024885924}
+  - {fileID: 1968608729}
+  - {fileID: 235201778}
+  - {fileID: 1286819303}
+  _playerDataSo: {fileID: 11400000, guid: ec1b0613d033e1146acd17390118398e, type: 2}
+  _gameDataSo: {fileID: 11400000, guid: 4f8ae13012a677c47ac2b8bf305abe0d, type: 2}
   _playerActionsManager: {fileID: 1130292217}
+  _pokerManager: {fileID: 1322990367}
 --- !u!114 &58536024
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -278,6 +291,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _potValueText: {fileID: 254673023}
   _callButtonText: {fileID: 1674146226}
+  _gameDataSo: {fileID: 11400000, guid: 4f8ae13012a677c47ac2b8bf305abe0d, type: 2}
+--- !u!114 &58536025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 58536019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 338ab6f65b3a430297a2f92b77a3ae76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerActionsManager: {fileID: 1130292217}
+--- !u!114 &58536026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 58536019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ced4e9acb1a44be88e00e7af838c6d03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pokerManager: {fileID: 1322990367}
+  _tableCardPos:
+  - {fileID: 1453849957}
+  - {fileID: 80543797}
+  - {fileID: 269574489}
+  - {fileID: 1522551001}
+  - {fileID: 1086026516}
+  _cardPrefab: {fileID: 8635427046025422651, guid: 4527a66b99b543e45844e62ff6433cbf, type: 3}
 --- !u!1 &80543797
 GameObject:
   m_ObjectHideFlags: 0

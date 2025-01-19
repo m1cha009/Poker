@@ -1,6 +1,6 @@
 namespace _Scripts.Enums
 {
-	public enum PlayerStageAction
+	public enum PlayerStage
 	{
 		Call,
 		Fold,

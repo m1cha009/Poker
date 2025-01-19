@@ -6,5 +6,6 @@ namespace _Scripts.SO
 	public class GameDataSo : ScriptableObject
 	{
 		[field: SerializeField] public int PlayerAmount { get; set; }
+		[field: SerializeField] public int BigBlind { get; set; }
 	}
 }
