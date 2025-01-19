@@ -206,7 +206,7 @@ namespace _Scripts
 			}
 		}
 		
-		public void CheckWinner(List<Player> activePlayers)
+		public Player CheckWinner(List<Player> activePlayers)
 		{
 			ClearConsole();
 			Dictionary<Player, BestPlayerHand> handsDic = new();
@@ -240,7 +240,6 @@ namespace _Scripts
 					return 0;
 				}));
 			
-			var k = 1;
 			foreach (var orderedHand in orderedByHandSet)
 			{
 				var cardsValues = string.Empty;
@@ -259,8 +258,9 @@ namespace _Scripts
 				var playerName = orderedHand.Key.PlayerName;
 
 				Debug.Log($"{playerName} cards:[{playerRankCards}], Hand:{orderedHand.Value.Hand}, Best cards: {cardsValues}");
-				k++;
 			}
+
+			return orderedByHandSet.First().Key;
 		}
 		
 		private void ClearConsole()

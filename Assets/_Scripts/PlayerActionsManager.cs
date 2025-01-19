@@ -11,6 +11,11 @@ namespace _Scripts
 
 		[SerializeField] public TMP_Text _playerInfoText;
 		
+		public void SetPlayerInfo(string name)
+		{
+			_playerInfoText.SetText($"{name} turn");
+		}
+		
 		public void CallClicked()
 		{
 			OnStageActionClick?.Invoke(PlayerStage.Call);
@@ -20,10 +25,10 @@ namespace _Scripts
 		{
 			OnStageActionClick?.Invoke(PlayerStage.Fold);
 		}
-
-		public void SetPlayerInfo(string name)
+		
+		public void BetClicked()
 		{
-			_playerInfoText.SetText($"{name} turn");
+			OnStageActionClick?.Invoke(PlayerStage.Bet);
 		}
 	}
 }

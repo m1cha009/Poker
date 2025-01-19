@@ -22,7 +22,7 @@ namespace _Scripts
 		private string _playerName;
 		private float _totalMoney;
 		private float _inGameMoney;
-		
+
 		public string PlayerName
 		{
 			get => _playerName;

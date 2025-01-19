@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using _Scripts.SO;
 using TMPro;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace _Scripts
 {
@@ -10,9 +13,8 @@ namespace _Scripts
 		[SerializeField] private TMP_Text _potValueText;
 		[SerializeField] private TMP_Text _callButtonText;
 		[SerializeField] private GameDataSo _gameDataSo;
-		
-		private float _potSize;
-		
+
+		public float PotSize { get; private set; }
 		public bool IsBet { get; private set; }
 		public float CurrentBet { get; private set; }
 
@@ -21,14 +23,22 @@ namespace _Scripts
 			CurrentBet = _gameDataSo.BigBlind;
 		}
 
-		public bool PLayerCall(Player player)
+		public bool PayCall(Player player)
 		{
-			return IsMoneyReduced(player, CurrentBet);
+			var payAmount = CurrentBet - player.InGameMoney;
+			return IsMoneyReduced(player, payAmount);
 		}
 
-		public bool PlayerBet(Player player, float amount)
+		public bool PayBlind(Player player, bool isBB)
 		{
-			if (!IsMoneyReduced(player, amount))
+			var blindValue = isBB ? CurrentBet : CurrentBet / 2;
+			return IsMoneyReduced(player, blindValue);
+		}
+
+		public bool PayBet(Player player, float amount)
+		{
+			var result = IsMoneyReduced(player, amount);
+			if (!result)
 			{
 				return false;
 			}
@@ -41,7 +51,9 @@ namespace _Scripts
 
 		public void AddMoneyToWinner(Player player)
 		{
-			player.TotalMoney += _potSize;
+			player.TotalMoney += PotSize;
+			
+			Debug.Log($"{player.PlayerName} Won €{PotSize}");
 			
 			ClearPot();
 		}
@@ -59,8 +71,8 @@ namespace _Scripts
 
 		private void ClearPot()
 		{
-			_potSize = 0;
-			_potValueText.SetText($"€{_potSize}");
+			PotSize = 0;
+			_potValueText.SetText($"€{PotSize}");
 		}
 		
 		private bool IsMoneyReduced(Player player, float amount)
@@ -71,8 +83,9 @@ namespace _Scripts
 			}
 			
 			player.TotalMoney -= amount;
-			_potSize += amount;
-			_potValueText.SetText($"€{_potSize}");
+			player.InGameMoney += amount;
+			PotSize += amount;
+			_potValueText.SetText($"€{PotSize}");
 
 			return true;
 		}

@@ -66,10 +66,22 @@ namespace _Scripts
 				
 				if (i == _tablePlayers.Count - 2)
 				{
+					if (!_moneyManager.PayBlind(player, false))
+					{
+						Debug.LogError("Couldn't pay SB");
+						return;
+					}
+					
 					player.TriggerBlind(true, false);
 				}
 				else if (i == _tablePlayers.Count - 1)
 				{
+					if (!_moneyManager.PayBlind(player, true))
+					{
+						Debug.LogError("Couldn't pay BB");
+						return;
+					}
+					
 					player.TriggerBlind(true, true);
 				}
 				
@@ -123,10 +135,11 @@ namespace _Scripts
 		{
 			if (_activePlayers.Count == 1)
 			{
-				Debug.Log($"{_activePlayers.First().PlayerName} Won");
+				var player = _activePlayers.First();
+				_moneyManager.AddMoneyToWinner(player);
 				
 				TriggerActionVisibility(false);
-				_activePlayers.ForEach(player => player.InGameMoney = 0);
+				_activePlayers.ForEach(p => p.InGameMoney = 0);
 				
 				return;
 			}
@@ -139,7 +152,8 @@ namespace _Scripts
 			{
 				if (_tableStagesManager.CurrentStage == TableStage.River)
 				{
-					_pokerManager.CheckWinner(_activePlayers);
+					var winner = _pokerManager.CheckWinner(_activePlayers);
+					_moneyManager.AddMoneyToWinner(winner);
 					TriggerActionVisibility(false);
 					
 					return;

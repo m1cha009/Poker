@@ -43,8 +43,16 @@ namespace _Scripts
 			}
 			else if (_tableStagesManager.CurrentStage == TableStage.PreFlop) // check if preflop
 			{
-				// prepare buttons [Fold, Call BB, Bet]\
 				_playerActionsManager.gameObject.SetActive(true);
+
+				if (Mathf.Approximately(_moneyManager.CurrentBet, player.InGameMoney))
+				{
+					// prepare buttons [Fold, Check, Bet]
+				}
+				else
+				{
+					// prepare buttons [Fold, Call BB, Bet]
+				}
 			}
 			else
 			{
@@ -64,14 +72,9 @@ namespace _Scripts
 			switch (playerStage)
 			{
 				case PlayerStage.Call:
-					if (_moneyManager.PLayerCall(_player))
+					if (!_moneyManager.PayCall(_player))
 					{
-						_player.InGameMoney = _moneyManager.CurrentBet;
-					}
-					else
-					{
-						Debug.LogError($"{_player.PlayerName} don't have enough money to CALL");
-						
+						Debug.LogError("Couldn't pay call");
 						return;
 					}
 
@@ -89,14 +92,9 @@ namespace _Scripts
 					
 					break;
 				case PlayerStage.Bet:
-					if (_moneyManager.PlayerBet(_player,_moneyManager.CurrentBet * 2)) // TODO: Remove hardcoded amount
+					if (!_moneyManager.PayBet(_player, _moneyManager.CurrentBet * 2))
 					{
-						_player.InGameMoney = _moneyManager.CurrentBet;
-					}
-					else
-					{
-						Debug.LogError($"{_player.PlayerName} don't have enough money to BET");
-						
+						Debug.LogError("Couldn't pay bet");
 						return;
 					}
 					
