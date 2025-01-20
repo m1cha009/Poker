@@ -82,7 +82,7 @@ namespace _Scripts
 						return;
 					}
 
-					Debug.Log($"{_player.PlayerName} Called");
+					Debug.Log($"{_player.PlayerName} Called €{_moneyManager.CurrentBet}");
 					
 					OnStageActionChanged?.Invoke(PlayerStage.Call);
 					
@@ -102,7 +102,7 @@ namespace _Scripts
 						return;
 					}
 					
-					Debug.Log($"{_player.PlayerName} Bet");
+					Debug.Log($"{_player.PlayerName} Bet €{_moneyManager.CurrentBet}");
 					
 					OnStageActionChanged?.Invoke(PlayerStage.Bet);
 					

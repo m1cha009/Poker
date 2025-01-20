@@ -28,6 +28,7 @@ namespace _Scripts
 			_dealCardsButton.onClick.AddListener(OnDealCardsClick);
 			
 			_entryPlayerIndex = Random.Range(0, _gameDataSo.PlayerAmount);
+			// _entryPlayerIndex = 0;
 		}
 
 		private void OnDestroy()

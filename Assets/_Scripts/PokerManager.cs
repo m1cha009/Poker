@@ -82,8 +82,6 @@ namespace _Scripts
 			// {
 			// 	_cardsStack.Push(card);
 			// }
-			
-			Debug.Log("Cards shuffled");
 		}
 		
 		private List<CardData> FourthOKindCards()

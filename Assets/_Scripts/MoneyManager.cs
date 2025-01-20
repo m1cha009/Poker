@@ -43,7 +43,7 @@ namespace _Scripts
 				return false;
 			}
 			
-			CurrentBet = amount;
+			CurrentBet = player.InGameMoney;
 			IsBet = true;
 
 			return true;

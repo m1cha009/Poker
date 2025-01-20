@@ -90,7 +90,8 @@ namespace _Scripts
 				
 				_activePlayers.Add(player);
 			}
-			
+
+
 			_playerStagesManager.SetupPlayerStage(_activePlayers[0]);
 		}
 		
@@ -110,63 +111,81 @@ namespace _Scripts
 			switch(playerStage)
 			{
 				case PlayerStage.Call:
-					_currentPlayerIndex++;
+					_currentPlayerIndex = (_currentPlayerIndex + 1) % _activePlayers.Count;
 					break;
 				case PlayerStage.Fold:
 					_activePlayers.RemoveAt(_currentPlayerIndex);
+					if (_currentPlayerIndex >= _activePlayers.Count)
+					{
+						_currentPlayerIndex = 0;
+					}
 					break;
 				case PlayerStage.Bet:
-					_currentPlayerIndex = _currentPlayerIndex + 1 % _activePlayers.Count;
-					
+					_currentPlayerIndex = (_currentPlayerIndex + 1) % _activePlayers.Count;
 					break;
 				case PlayerStage.Check:
 					break;
 			}
-			
-			CheckWinningCondition();
-		}
 
-		private void TriggerActionVisibility(bool isVisible) 
-		{
-			_playerActionsManager.gameObject.SetActive(isVisible);
-		}
-		
-		private void CheckWinningCondition()
-		{
-			if (_activePlayers.Count == 1)
+			if (HasAllBet())
 			{
-				var player = _activePlayers.First();
-				_moneyManager.AddMoneyToWinner(player);
-				
-				TriggerActionVisibility(false);
-				_activePlayers.ForEach(p => p.InGameMoney = 0);
-				
-				return;
-			}
-
-			if (_moneyManager.IsBet)
-			{
-				Debug.Log("Somebody Bet");
-			}
-			else if (_currentPlayerIndex >= _activePlayers.Count)
-			{
-				if (_tableStagesManager.CurrentStage == TableStage.River)
+				var winner = HasWinner();
+				if (winner != null)
 				{
-					var winner = _pokerManager.CheckWinner(_activePlayers);
 					_moneyManager.AddMoneyToWinner(winner);
 					TriggerActionVisibility(false);
 					
 					return;
 				}
-			
-				_tableStagesManager.NextTableStage();
-			
-				_currentPlayerIndex = 0;
-				
-				_activePlayers.ForEach(player => player.InGameMoney = 0);
+
+				ChangeTableStage();
 			}
 			
 			_playerStagesManager.SetupPlayerStage(_activePlayers[_currentPlayerIndex]);
+		}
+
+		private bool HasAllBet()
+		{
+			foreach (var player in _activePlayers)
+			{
+				if (!Mathf.Approximately(player.InGameMoney, _moneyManager.CurrentBet))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		private Player HasWinner()
+		{
+			if (_activePlayers.Count == 1)
+			{
+				return _activePlayers.First();
+			}
+
+			if (_tableStagesManager.CurrentStage == TableStage.River)
+			{
+				return _pokerManager.CheckWinner(_activePlayers);
+			}
+
+			return null;
+		}
+
+		private void ChangeTableStage()
+		{
+			_currentPlayerIndex = 0;
+				
+			_activePlayers.ForEach(player => player.InGameMoney = 0);
+
+			_moneyManager.ClearBet();
+			
+			_tableStagesManager.NextTableStage();
+		}
+		
+		private void TriggerActionVisibility(bool isVisible) 
+		{
+			_playerActionsManager.gameObject.SetActive(isVisible);
 		}
 	}
 }
