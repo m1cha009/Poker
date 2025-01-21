@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using _Scripts.Enums;
 using _Scripts.SO;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace _Scripts
@@ -91,7 +92,7 @@ namespace _Scripts
 				_activePlayers.Add(player);
 			}
 
-
+			_lastPlayerIndex = 0;
 			_playerStagesManager.SetupPlayerStage(_activePlayers[0]);
 		}
 		
@@ -106,6 +107,8 @@ namespace _Scripts
 			}
 		}
 		
+		private int _lastPlayerIndex;
+		
 		private void OnPlayerStageActionChangedEvent(PlayerStage playerStage)
 		{
 			switch(playerStage)
@@ -115,6 +118,9 @@ namespace _Scripts
 					break;
 				case PlayerStage.Fold:
 					_activePlayers.RemoveAt(_currentPlayerIndex);
+					
+					// _lastPlayerIndex = (_lastPlayerIndex - 1 + _activePlayers.Count) % _activePlayers.Count;
+					
 					if (_currentPlayerIndex >= _activePlayers.Count)
 					{
 						_currentPlayerIndex = 0;
@@ -124,21 +130,32 @@ namespace _Scripts
 					_currentPlayerIndex = (_currentPlayerIndex + 1) % _activePlayers.Count;
 					break;
 				case PlayerStage.Check:
+					_currentPlayerIndex = (_currentPlayerIndex + 1) % _activePlayers.Count;
 					break;
 			}
 
-			if (HasAllBet())
+			if (_moneyManager.IsBet)
 			{
-				var winner = HasWinner();
-				if (winner != null)
+				if (HasAllBet())
 				{
-					_moneyManager.AddMoneyToWinner(winner);
-					TriggerActionVisibility(false);
+					var winner = HasWinner(); 
+					if (winner != null) 
+					{ 
+						_moneyManager.AddMoneyToWinner(winner); 
+						TriggerActionVisibility(false);
 					
-					return;
+						return;
+					}
+				
+					ChangeTableStage();
 				}
-
-				ChangeTableStage();
+			}
+			else
+			{
+				if (_currentPlayerIndex == _lastPlayerIndex)
+				{
+					ChangeTableStage();
+				}
 			}
 			
 			_playerStagesManager.SetupPlayerStage(_activePlayers[_currentPlayerIndex]);

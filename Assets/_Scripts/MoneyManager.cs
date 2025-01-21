@@ -31,6 +31,7 @@ namespace _Scripts
 
 		public bool PayBlind(Player player, bool isBB)
 		{
+			IsBet = true;
 			var blindValue = isBB ? CurrentBet : CurrentBet / 2;
 			return IsMoneyReduced(player, blindValue);
 		}
