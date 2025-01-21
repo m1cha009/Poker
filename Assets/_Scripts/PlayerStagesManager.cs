@@ -35,17 +35,13 @@ namespace _Scripts
 		{
 			_player = player;
 			
+			_player.SetCurrentPlayerBg(true);
+			
 			_playerActionsManager.SetPlayerInfo(_player.PlayerName);
+			_playerActionsManager.gameObject.SetActive(true);
 			
 			if (_moneyManager.IsBet) // check if bet was made
 			{
-				// prepare buttons [Fold, Call BetSize, Raise]
-				_playerActionsManager.SetupButtons(ActionButtonStages.Fold | ActionButtonStages.Call | ActionButtonStages.Raise);
-			}
-			else if (_tableStagesManager.CurrentStage == TableStage.PreFlop) // check if preflop
-			{
-				_playerActionsManager.gameObject.SetActive(true);
-
 				if (Mathf.Approximately(_moneyManager.CurrentBet, player.InGameMoney))
 				{
 					// prepare buttons [Fold, Check, Bet]
@@ -72,6 +68,8 @@ namespace _Scripts
 				
 				return;
 			}
+			
+			_player.SetCurrentPlayerBg(false);
 			
 			switch (playerStage)
 			{
@@ -108,6 +106,10 @@ namespace _Scripts
 					
 					break;
 				case PlayerStage.Check:
+					Debug.Log($"{_player.PlayerName} Check");
+					
+					OnStageActionChanged?.Invoke(PlayerStage.Check);
+					
 					break;
 			}
 		}

@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using _Scripts.SO;
 using TMPro;
 using UnityEngine;
@@ -31,6 +28,7 @@ namespace _Scripts
 
 		public bool PayBlind(Player player, bool isBB)
 		{
+			IsBet = true;
 			var blindValue = isBB ? CurrentBet : CurrentBet / 2;
 			return IsMoneyReduced(player, blindValue);
 		}

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using _Scripts.Data;
 using _Scripts.Helpers;
@@ -15,6 +16,7 @@ namespace _Scripts
 		[SerializeField] private GameObject _bbBlind;
 		[SerializeField] private TMP_Text _totalMoneyText;
 		[SerializeField] private TMP_Text _inGameMoneyText;
+		[SerializeField] private GameObject _currentPlayerBg;
 
 		private bool _isFirst = true;
 		private readonly List<CardData> _playerCards = new();
@@ -55,13 +57,19 @@ namespace _Scripts
 			}
 		}
 
+		private void Start()
+		{
+			_currentPlayerBg.SetActive(false);
+
+			InGameMoney = 0;
+			
+			ClearCards();
+		}
+
 		public void InitializePlayer(PlayerData playerData)
 		{
 			PlayerName = playerData.Name;
 			TotalMoney = playerData.Money;
-			InGameMoney = 0;
-			
-			ClearCards();
 		}
 
 		public void SetCard(CardData cardData)
@@ -111,6 +119,8 @@ namespace _Scripts
 			_card1.SetDefaultCardImage();
 			_card2.SetDefaultCardImage();
 		}
+		
+		public void SetCurrentPlayerBg(bool value) => _currentPlayerBg.SetActive(value);
 
 		private void SetInGameMoneyText(float value)
 		{
