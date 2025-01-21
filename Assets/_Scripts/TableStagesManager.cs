@@ -34,10 +34,11 @@ namespace _Scripts
 		{
 			CurrentStage = (int)CurrentStage + 1 >= Enum.GetValues(typeof(TableStage)).Length ? 0 : CurrentStage + 1;
 			
+			Debug.Log($"New Stage: {CurrentStage}");
+			
 			switch (CurrentStage)
 			{
 				case TableStage.PreFlop:
-					Debug.Log("Changed to Preflop stage");
 					return;
 				
 				case TableStage.Flop:

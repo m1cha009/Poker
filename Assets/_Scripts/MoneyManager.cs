@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using _Scripts.SO;
 using TMPro;
 using UnityEngine;
