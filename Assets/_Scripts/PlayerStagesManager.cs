@@ -35,6 +35,8 @@ namespace _Scripts
 		{
 			_player = player;
 			
+			_player.SetCurrentPlayerBg(true);
+			
 			_playerActionsManager.SetPlayerInfo(_player.PlayerName);
 			_playerActionsManager.gameObject.SetActive(true);
 			
@@ -66,6 +68,8 @@ namespace _Scripts
 				
 				return;
 			}
+			
+			_player.SetCurrentPlayerBg(false);
 			
 			switch (playerStage)
 			{

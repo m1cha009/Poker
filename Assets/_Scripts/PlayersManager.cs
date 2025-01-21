@@ -87,11 +87,10 @@ namespace _Scripts
 				}
 				
 				player.DisplayCards();
-				_currentPlayerIndex = 0;
-				
 				_activePlayers.Add(player);
 			}
 
+			_currentPlayerIndex = 0;
 			_lastPlayerIndex = 0;
 			_playerStagesManager.SetupPlayerStage(_activePlayers[0]);
 		}
