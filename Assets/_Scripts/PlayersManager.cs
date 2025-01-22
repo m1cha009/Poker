@@ -130,6 +130,7 @@ namespace _Scripts
 					
 					break;
 				case PlayerStage.Bet:
+				case PlayerStage.Raise:
 					_lastPlayerIndex = (_currentPlayerIndex - 1 + _activePlayers.Count) % _activePlayers.Count;
 					_currentPlayerIndex = (_currentPlayerIndex + 1) % _activePlayers.Count;
 					
@@ -146,6 +147,11 @@ namespace _Scripts
 		{
 			if (_currentPlayerIndex == _lastPlayerIndex) // if last player
 			{
+				if (playerStage == PlayerStage.Bet || playerStage == PlayerStage.Raise)
+				{
+					return false;
+				}
+				
 				if (playerStage == PlayerStage.Fold)
 				{
 					_activePlayers.RemoveAt(_currentPlayerIndex);

@@ -9,7 +9,6 @@ namespace _Scripts
 	{
 		[SerializeField] private PlayerActionsManager _playerActionsManager;
 		private MoneyManager _moneyManager;
-		private TableStagesManager _tableStagesManager;
 		
 		private Player _player;
 		
@@ -18,7 +17,6 @@ namespace _Scripts
 		private void Awake()
 		{
 			TryGetComponent(out _moneyManager);
-			TryGetComponent(out _tableStagesManager);
 		}
 
 		private void Start()
@@ -40,7 +38,20 @@ namespace _Scripts
 			_playerActionsManager.SetPlayerInfo(_player.PlayerName);
 			_playerActionsManager.gameObject.SetActive(true);
 			
-			if (_moneyManager.IsBet) // check if bet was made
+			if (_moneyManager.IsBet)
+			{
+				if (Mathf.Approximately(_moneyManager.CurrentBet, player.InGameMoney))
+				{
+					// prepare buttons [Fold, Check, Raise]
+					_playerActionsManager.SetupButtons(ActionButtonStages.Fold | ActionButtonStages.Check | ActionButtonStages.Raise);
+				}
+				else
+				{
+					// prepare buttons [Fold, Call BB, Raise]
+					_playerActionsManager.SetupButtons(ActionButtonStages.Fold | ActionButtonStages.Call | ActionButtonStages.Raise);
+				}
+			}
+			else if (_moneyManager.IsBlind)
 			{
 				if (Mathf.Approximately(_moneyManager.CurrentBet, player.InGameMoney))
 				{
@@ -82,15 +93,11 @@ namespace _Scripts
 
 					Debug.Log($"{_player.PlayerName} Called €{_moneyManager.CurrentBet}");
 					
-					OnStageActionChanged?.Invoke(PlayerStage.Call);
-					
 					break;
 				case PlayerStage.Fold:
 					_player.ClearCards();
 					
 					Debug.Log($"{_player.PlayerName} Folded");
-					
-					OnStageActionChanged?.Invoke(PlayerStage.Fold);
 					
 					break;
 				case PlayerStage.Bet:
@@ -102,16 +109,24 @@ namespace _Scripts
 					
 					Debug.Log($"{_player.PlayerName} Bet €{_moneyManager.CurrentBet}");
 					
-					OnStageActionChanged?.Invoke(PlayerStage.Bet);
-					
 					break;
 				case PlayerStage.Check:
 					Debug.Log($"{_player.PlayerName} Check");
 					
-					OnStageActionChanged?.Invoke(PlayerStage.Check);
+					break;
+				case PlayerStage.Raise:
+					if (!_moneyManager.PayBet(_player, _moneyManager.CurrentBet * 2))
+					{
+						Debug.LogError("Couldn't pay bet");
+						return;
+					}
 					
+					Debug.Log($"{_player.PlayerName} Raise €{_moneyManager.CurrentBet}");
+
 					break;
 			}
+			
+			OnStageActionChanged?.Invoke(playerStage);
 		}
 	}
 }
