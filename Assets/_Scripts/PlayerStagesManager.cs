@@ -115,6 +115,12 @@ namespace _Scripts
 					
 					break;
 				case PlayerStage.Raise:
+					if (!_moneyManager.PayBet(_player, _moneyManager.CurrentBet * 2))
+					{
+						Debug.LogError("Couldn't pay bet");
+						return;
+					}
+					
 					Debug.Log($"{_player.PlayerName} Raise €{_moneyManager.CurrentBet}");
 
 					break;

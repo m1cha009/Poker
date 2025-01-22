@@ -130,6 +130,7 @@ namespace _Scripts
 					
 					break;
 				case PlayerStage.Bet:
+				case PlayerStage.Raise:
 					_lastPlayerIndex = (_currentPlayerIndex - 1 + _activePlayers.Count) % _activePlayers.Count;
 					_currentPlayerIndex = (_currentPlayerIndex + 1) % _activePlayers.Count;
 					
