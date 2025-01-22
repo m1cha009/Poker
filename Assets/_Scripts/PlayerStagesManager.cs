@@ -82,15 +82,11 @@ namespace _Scripts
 
 					Debug.Log($"{_player.PlayerName} Called €{_moneyManager.CurrentBet}");
 					
-					OnStageActionChanged?.Invoke(PlayerStage.Call);
-					
 					break;
 				case PlayerStage.Fold:
 					_player.ClearCards();
 					
 					Debug.Log($"{_player.PlayerName} Folded");
-					
-					OnStageActionChanged?.Invoke(PlayerStage.Fold);
 					
 					break;
 				case PlayerStage.Bet:
@@ -102,16 +98,18 @@ namespace _Scripts
 					
 					Debug.Log($"{_player.PlayerName} Bet €{_moneyManager.CurrentBet}");
 					
-					OnStageActionChanged?.Invoke(PlayerStage.Bet);
-					
 					break;
 				case PlayerStage.Check:
 					Debug.Log($"{_player.PlayerName} Check");
 					
-					OnStageActionChanged?.Invoke(PlayerStage.Check);
-					
+					break;
+				case PlayerStage.Raise:
+					Debug.Log($"{_player.PlayerName} Raise €{_moneyManager.CurrentBet}");
+
 					break;
 			}
+			
+			OnStageActionChanged?.Invoke(playerStage);
 		}
 	}
 }
