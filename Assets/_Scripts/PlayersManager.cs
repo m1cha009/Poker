@@ -147,6 +147,11 @@ namespace _Scripts
 		{
 			if (_currentPlayerIndex == _lastPlayerIndex) // if last player
 			{
+				if (playerStage == PlayerStage.Bet || playerStage == PlayerStage.Raise)
+				{
+					return false;
+				}
+				
 				if (playerStage == PlayerStage.Fold)
 				{
 					_activePlayers.RemoveAt(_currentPlayerIndex);
