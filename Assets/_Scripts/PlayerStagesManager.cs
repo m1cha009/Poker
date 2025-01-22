@@ -9,7 +9,6 @@ namespace _Scripts
 	{
 		[SerializeField] private PlayerActionsManager _playerActionsManager;
 		private MoneyManager _moneyManager;
-		private TableStagesManager _tableStagesManager;
 		
 		private Player _player;
 		
@@ -18,7 +17,6 @@ namespace _Scripts
 		private void Awake()
 		{
 			TryGetComponent(out _moneyManager);
-			TryGetComponent(out _tableStagesManager);
 		}
 
 		private void Start()
@@ -40,7 +38,20 @@ namespace _Scripts
 			_playerActionsManager.SetPlayerInfo(_player.PlayerName);
 			_playerActionsManager.gameObject.SetActive(true);
 			
-			if (_moneyManager.IsBet) // check if bet was made
+			if (_moneyManager.IsBet)
+			{
+				if (Mathf.Approximately(_moneyManager.CurrentBet, player.InGameMoney))
+				{
+					// prepare buttons [Fold, Check, Raise]
+					_playerActionsManager.SetupButtons(ActionButtonStages.Fold | ActionButtonStages.Check | ActionButtonStages.Raise);
+				}
+				else
+				{
+					// prepare buttons [Fold, Call BB, Raise]
+					_playerActionsManager.SetupButtons(ActionButtonStages.Fold | ActionButtonStages.Call | ActionButtonStages.Raise);
+				}
+			}
+			else if (_moneyManager.IsBlind)
 			{
 				if (Mathf.Approximately(_moneyManager.CurrentBet, player.InGameMoney))
 				{

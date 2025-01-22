@@ -13,6 +13,7 @@ namespace _Scripts
 
 		public float PotSize { get; private set; }
 		public bool IsBet { get; private set; }
+		public bool IsBlind { get; private set; }
 		public float CurrentBet { get; private set; }
 
 		private void Start()
@@ -28,7 +29,7 @@ namespace _Scripts
 
 		public bool PayBlind(Player player, bool isBB)
 		{
-			IsBet = true;
+			IsBlind = true;
 			var blindValue = isBB ? CurrentBet : CurrentBet / 2;
 			return IsMoneyReduced(player, blindValue);
 		}
@@ -65,6 +66,7 @@ namespace _Scripts
 		{
 			CurrentBet = _gameDataSo.BigBlind;
 			IsBet = false;
+			IsBlind = false;
 		}
 
 		private void ClearPot()
