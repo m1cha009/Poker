@@ -48,6 +48,19 @@ namespace _Scripts
 			return true;
 		}
 
+		public bool PayAllIn(Player player, float amount)
+		{
+			var result = IsMoneyReduced(player, amount);
+			if (!result)
+			{
+				return false;
+			}
+
+			IsBet = true;
+
+			return true;
+		}
+
 		public void AddMoneyToWinner(Player player)
 		{
 			player.TotalMoney += PotSize;

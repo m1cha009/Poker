@@ -138,6 +138,9 @@ namespace _Scripts
 				case PlayerStage.Check:
 					_currentPlayerIndex = (_currentPlayerIndex + 1) % _activePlayers.Count;
 					break;
+				case PlayerStage.AllIn:
+					_currentPlayerIndex = (_currentPlayerIndex + 1) % _activePlayers.Count;
+					break;
 			}
 			
 			_playerStagesManager.SetupPlayerStage(_activePlayers[_currentPlayerIndex]);
@@ -147,7 +150,7 @@ namespace _Scripts
 		{
 			if (_currentPlayerIndex == _lastPlayerIndex) // if last player
 			{
-				if (playerStage == PlayerStage.Bet || playerStage == PlayerStage.Raise)
+				if (playerStage is PlayerStage.Bet or PlayerStage.Raise or PlayerStage.AllIn)
 				{
 					return false;
 				}

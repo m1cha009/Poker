@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <PlayersData>k__BackingField:
   - <Name>k__BackingField: Jonas
-    <Money>k__BackingField: 1000
+    <Money>k__BackingField: 40
   - <Name>k__BackingField: Petras
-    <Money>k__BackingField: 2000
+    <Money>k__BackingField: 30
   - <Name>k__BackingField: Algis
-    <Money>k__BackingField: 1500
+    <Money>k__BackingField: 40
   - <Name>k__BackingField: Pranas
-    <Money>k__BackingField: 500
+    <Money>k__BackingField: 50
   - <Name>k__BackingField: Giedrius
-    <Money>k__BackingField: 1000
+    <Money>k__BackingField: 100
   - <Name>k__BackingField: Onute
-    <Money>k__BackingField: 6900
+    <Money>k__BackingField: 100

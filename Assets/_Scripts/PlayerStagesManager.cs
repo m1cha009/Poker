@@ -40,34 +40,68 @@ namespace _Scripts
 			
 			if (_moneyManager.IsBet)
 			{
-				if (Mathf.Approximately(_moneyManager.CurrentBet, player.InGameMoney))
+				if (Mathf.Approximately(_moneyManager.CurrentBet, _player.InGameMoney))
 				{
 					// prepare buttons [Fold, Check, Raise]
 					_playerActionsManager.SetupButtons(ActionButtonStages.Fold | ActionButtonStages.Check | ActionButtonStages.Raise);
 				}
+				else if (_player.TotalMoney + _player.InGameMoney < _moneyManager.CurrentBet)
+				{
+					// prepare [Fold, All-in]
+					_playerActionsManager.SetupButtons(ActionButtonStages.Fold | ActionButtonStages.AllIn);
+				}
 				else
 				{
-					// prepare buttons [Fold, Call BB, Raise]
-					_playerActionsManager.SetupButtons(ActionButtonStages.Fold | ActionButtonStages.Call | ActionButtonStages.Raise);
+					if (_player.TotalMoney < _moneyManager.CurrentBet * 2)
+					{
+						// prepare [Fold, Call, All-In]
+						_playerActionsManager.SetupButtons(ActionButtonStages.Fold | ActionButtonStages.Call | ActionButtonStages.AllIn);
+					}
+					else
+					{
+						// prepare buttons [Fold, Call BB, Raise]
+						_playerActionsManager.SetupButtons(ActionButtonStages.Fold | ActionButtonStages.Call | ActionButtonStages.Raise);
+					}
 				}
 			}
 			else if (_moneyManager.IsBlind)
 			{
-				if (Mathf.Approximately(_moneyManager.CurrentBet, player.InGameMoney))
+				if (Mathf.Approximately(_moneyManager.CurrentBet, _player.InGameMoney))
 				{
 					// prepare buttons [Fold, Check, Bet]
 					_playerActionsManager.SetupButtons(ActionButtonStages.Fold | ActionButtonStages.Check | ActionButtonStages.Bet);
 				}
+				else if (_player.TotalMoney + _player.InGameMoney < _moneyManager.CurrentBet)
+				{
+					// prepare [Fold, All-In]
+					_playerActionsManager.SetupButtons(ActionButtonStages.Fold | ActionButtonStages.AllIn);
+				}
 				else
 				{
-					// prepare buttons [Fold, Call BB, Bet]
-					_playerActionsManager.SetupButtons(ActionButtonStages.Fold | ActionButtonStages.Call | ActionButtonStages.Bet);
+					if (_player.TotalMoney < _moneyManager.CurrentBet * 2)
+					{
+						// prepare [Fold, Call, All-In]
+						_playerActionsManager.SetupButtons(ActionButtonStages.Fold | ActionButtonStages.Call | ActionButtonStages.AllIn);
+					}
+					else
+					{
+						// prepare buttons [Fold, Call BB, Bet]
+						_playerActionsManager.SetupButtons(ActionButtonStages.Fold | ActionButtonStages.Call | ActionButtonStages.Bet);
+					}
 				}
 			}
 			else
 			{
-				// prepare buttons [Fold, Check, Bet]
-				_playerActionsManager.SetupButtons(ActionButtonStages.Fold | ActionButtonStages.Check | ActionButtonStages.Bet);
+				if (_player.TotalMoney < _moneyManager.CurrentBet * 2)
+				{
+					// prepare [Fold, Call, All-In]
+					_playerActionsManager.SetupButtons(ActionButtonStages.Fold | ActionButtonStages.Check | ActionButtonStages.AllIn);
+				}
+				else
+				{
+					// prepare buttons [Fold, Check, Bet]
+					_playerActionsManager.SetupButtons(ActionButtonStages.Fold | ActionButtonStages.Check | ActionButtonStages.Bet);
+				}
 			}
 		}
 		
@@ -96,6 +130,7 @@ namespace _Scripts
 					break;
 				case PlayerStage.Fold:
 					_player.ClearCards();
+					_player.InGameMoney = 0;
 					
 					Debug.Log($"{_player.PlayerName} Folded");
 					
@@ -117,12 +152,21 @@ namespace _Scripts
 				case PlayerStage.Raise:
 					if (!_moneyManager.PayBet(_player, _moneyManager.CurrentBet * 2))
 					{
-						Debug.LogError("Couldn't pay bet");
+						Debug.LogError("Couldn't pay Raise");
 						return;
 					}
 					
 					Debug.Log($"{_player.PlayerName} Raise €{_moneyManager.CurrentBet}");
 
+					break;
+				case PlayerStage.AllIn:
+					if (!_moneyManager.PayAllIn(_player, _player.TotalMoney))
+					{
+						Debug.LogError("Couldn't pay All-In");
+						return;
+					}
+					
+					Debug.Log($"{_player.PlayerName} All In €{_player.InGameMoney}");
 					break;
 			}
 			
